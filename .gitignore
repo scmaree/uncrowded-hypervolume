@@ -37,6 +37,7 @@
 
 # log files
 statistics*
+*.dat
 
 # executables
 bezea
