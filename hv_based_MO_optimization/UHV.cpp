@@ -162,7 +162,6 @@ namespace hillvallea
     
     if(!mo_fitness_function->analytical_gradient_available) {
       use_finite_differences = true;
-      std::cout << "MO function has no analytical gradient available. Fall back to using FD." << std::endl;
     }
     
     // end of FD settings
