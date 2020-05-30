@@ -1,0 +1,34 @@
+CC = g++ -O3 
+CFLAGS = -std=c++11 -MMD
+
+MOHILLVALLEA_DIR := ./mohillvallea
+MOHILLVALLEA_SRC_FILES := $(wildcard $(MOHILLVALLEA_DIR)/*.cpp)
+MOHILLVALLEA_OBJ_FILES := $(patsubst $(MOHILLVALLEA_DIR)/%.cpp,$(MOHILLVALLEA_DIR)/%.o,$(MOHILLVALLEA_SRC_FILES))
+MOHILLVALLEA_DEP_FILES := $(patsubst $(MOHILLVALLEA_DIR)/%.cpp,$(MOHILLVALLEA_DIR)/%.d,$(MOHILLVALLEA_SRC_FILES))
+
+GOMEA_DIR := ./gomea
+GOMEA_SRC_FILES := $(wildcard $(GOMEA_DIR)/*.cpp)
+GOMEA_OBJ_FILES := $(patsubst $(GOMEA_DIR)/%.cpp,$(GOMEA_DIR)/%.o,$(GOMEA_SRC_FILES))
+GOMEA_DEP_FILES := $(patsubst $(GOMEA_DIR)/%.cpp,$(GOMEA_DIR)/%.d,$(GOMEA_SRC_FILES))
+
+BENCHMARK_DIR := ../benchmark_functions
+BENCHMARK_SRC_FILES := $(wildcard $(BENCHMARK_DIR)/*.cpp)
+BENCHMARK_OBJ_FILES := $(patsubst $(BENCHMARK_DIR)/%.cpp,$(BENCHMARK_DIR)/%.o,$(BENCHMARK_SRC_FILES))
+BENCHMARK_DEP_FILES := $(patsubst $(BENCHMARK_DIR)/%.cpp,$(BENCHMARK_DIR)/%.d,$(BENCHMARK_SRC_FILES))
+
+WFG_DIR := ../benchmark_functions/wfg_Toolkit
+WFG_SRC_FILES := $(wildcard $(WFG_DIR)/*.cpp)
+WFG_OBJ_FILES := $(patsubst $(WFG_DIR)/%.cpp,$(WFG_DIR)/%.o,$(WFG_SRC_FILES))
+WFG_DEP_FILES := $(patsubst $(WFG_DIR)/%.cpp,$(WFG_DIR)/%.d,$(WFG_SRC_FILES))
+
+
+all: mo_optimization.app
+
+mo_optimization.app: main.o $(MOHILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(WFG_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(GOMEA_OBJ_FILES)
+	$(CC) $(CFLAGS) -o $@ main.o $(MOHILLVALLEA_OBJ_FILES) $(WFG_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(GOMEA_OBJ_FILES)
+	
+%.o: %.cpp
+	$(CC) $(CFLAGS) -c -o $@ $<
+
+clean:
+	rm -f $(MOHILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_DEP_FILES) $(WFG_OBJ_FILES) $(WFG_DEP_FILES) $(BENCHMARK_DEP_FILES) $(BENCHMARK_OBJ_FILES) $(GOMEA_DEP_FILES) $(GOMEA_OBJ_FILES) *.d *.o *.txt *.app

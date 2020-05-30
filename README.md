@@ -1,9 +1,12 @@
 # Uncrowded-hypervolume based multi-objective optimization
-This repository contains implementations (C++) of different uncrowded-hypervolume based methods for (gradient-free) multi-objective optimization. Current implementations supports bi-objective optimization problems. 
+This repository contains implementations (C++) of different uncrowded-hypervolume based methods for (gradient-free) multi-objective optimization. Using the (uncrowded) hypervolume, multi-objective optimization problems can be formulated as (high-dimensional) single-objective optimization problems, in the hypervolume of a solution sets is optimized. For details, see the corresponding publications/preprints. 
 
-This repository is built upon the HillVallEA framework (https://github.com/scmaree/HillVallEA), which is a framework for black-box (gradient-free) multi-modal optimization. It is combined with MO-HillVallEA  (https://github.com/scmaree/MOHillVallEA), a black-box optimization algorithm for multi-objective optimization. A collection of different optimization approaches is included in this repository. A number of benchmark sets/problems has also been included, such as the Walking Fish Group (WFG) Toolkit, the ZDT problems, and a number of simple benchmark problems.
+The main publication corresponding to this work is
 
-Using the (uncrowded) hypervolume, multi-objective optimization problems can be formulated as (high-dimensional) single-objective optimization problems, in the hypervolume of a solution sets is optimized. For details, see the corresponding publications/preprints. 
+> Uncrowded Hypervolume-based Multi-objective Optimization with Gene-pool Optimal Mixing
+> by S.C. Maree, T. Alderliesten, P.A.N. Bosman, 2020 (https://arxiv.org/abs/2004.05068)
+
+This repository is built upon the HillVallEA framework (https://github.com/scmaree/HillVallEA), which is a framework for black-box (gradient-free) multi-modal optimization. It is combined with MO-HillVallEA  (https://github.com/scmaree/MOHillVallEA), a black-box optimization algorithm for multi-objective optimization. A collection of different optimization approaches is included in this repository. A number of benchmark sets/problems has also been included, such as the Walking Fish Group (WFG) Toolkit, the ZDT problems, and a number of simple benchmark problems. Current implementations supports bi-objective optimization problems. 
 
 # Getting started 
 
@@ -37,13 +40,13 @@ The population size (here: 31) can be set to its default by setting it to 0. Thi
 The maximum number of evaluations is set to 1 million evaluations in this example, runtime is limited to 60 seconds, and the value-to-reach is activated (`-r` flag). The random seed is set to 1234, and result files are written in the current directory.
 
 ### Sofomore-GOMEA
-The Sofomore framework is introduced in **Uncrowded Hypervolume Improvement: COMO-CMA-ES and the Sofomore framework** by C. Toure et al, 2019. Here, we present a version in which GOMEA is used to perform the internal optimization, as described in the above mentioned publication. 
+The Sofomore framework is introduced in *Uncrowded Hypervolume Improvement: COMO-CMA-ES and the Sofomore framework* by C. Toure et al., 2019. Here, we present a version in which GOMEA is used to perform the internal optimization, as described in the above mentioned publication. 
 
 `./sofomore_gomea -s -v -r 26 10 9 -10 10 31 1000 1000000 60 120.7876730749 1234 "./"`
 
 Sofomore-GOMEA does not require a linkage model to be specified (when the multi-objective problem is considered to be a black-box), and the remainder of the inputs is the same as for `uhv_gomea`.
 
-**Note: In Sofomore-GOMEA, re-evaluation of all solutions is performed at the beginning of each generation. The current implementation is lazy in the sense that it also re-evaluates the multi-objective fitness values, which is not required. These evaluations are not counted in all counters, but when using this code in any other benchmarking setting, this needs to be fixed**
+*Note: In Sofomore-GOMEA, re-evaluation of all solutions is performed at the beginning of each generation. The current implementation is lazy in the sense that it also re-evaluates the multi-objective fitness values, which is not required. These evaluations are not counted in all counters, but when using this code in any other benchmarking setting, this needs to be fixed.*
 
 ### UHV-Grad (gradient-based multi-objective optimization)
 Uncrowed hypervolume indicator can be used for efficient gradient-based multi-objective optimization, as described in,
