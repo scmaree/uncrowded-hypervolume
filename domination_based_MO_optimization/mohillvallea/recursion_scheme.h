@@ -50,13 +50,16 @@ namespace hicam
 
     // run the thing
     void run();
+    clock_t run_time;
+    unsigned int number_of_evaluations;
     
     // Elitist Archive
     // a single elitist archive for all populations combined
     //------------------------------------------------------------------------
     elitist_archive_pt elitist_archive;
     elitist_archive_pt approximation_set;
-    
+
+
   private:
 
 
@@ -100,7 +103,6 @@ namespace hicam
     // Stopping Criteria
     //------------------------------------------------------------------------
     clock_t start_time;
-    unsigned int number_of_evaluations;
     unsigned int total_number_of_generations;
     double reached_vtr; // we save it when writing as it is expensive to evaluate
     unsigned int number_of_evaluations_hillvalley_clustering;

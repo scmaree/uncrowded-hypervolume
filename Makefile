@@ -26,7 +26,7 @@ WFG_BENCHMARK_SRC_FILES := $(wildcard $(WFG_BENCHMARK_DIR)/*.cpp)
 WFG_BENCHMARK_OBJ_FILES := $(patsubst $(WFG_BENCHMARK_DIR)/%.cpp,$(WFG_BENCHMARK_DIR)/%.o,$(WFG_BENCHMARK_SRC_FILES))
 WFG_BENCHMARK_DEP_FILES := $(patsubst $(WFG_BENCHMARK_DIR)/%.cpp,$(WFG_BENCHMARK_DIR)/%.d,$(WFG_BENCHMARK_SRC_FILES))
 
-all: uhv_gomea bezea sofomore_gomea uhv_grad
+all: uhv_gomea bezea sofomore_gomea uhv_grad mogomea mamalgam
 
 uhv_gomea: ./hv_based_MO_optimization/main_uhv_gomea.o ./hv_based_MO_optimization/bezier.o ./hv_based_MO_optimization/UHV.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES)  $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
 	$(CC) $(CFLAGS) -o $@ ./hv_based_MO_optimization/main_uhv_gomea.o ./hv_based_MO_optimization/UHV.o ./hv_based_MO_optimization/bezier.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
@@ -39,6 +39,13 @@ uhv_grad: ./hv_based_MO_optimization/main_uhv_grad.o ./hv_based_MO_optimization/
 
 bezea: ./hv_based_MO_optimization/main_bezea.o ./hv_based_MO_optimization/bezier.o ./hv_based_MO_optimization/UHV.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
 	$(CC) $(CFLAGS) -o $@ ./hv_based_MO_optimization/main_bezea.o ./hv_based_MO_optimization/UHV.o ./hv_based_MO_optimization/bezier.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
+
+mogomea: ./domination_based_MO_optimization/main_mogomea.o  $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
+	$(CC) $(CFLAGS) -o $@ ./domination_based_MO_optimization/main_mogomea.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
+
+mamalgam: ./domination_based_MO_optimization/main_mamalgam.o  $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
+	$(CC) $(CFLAGS) -o $@ ./domination_based_MO_optimization/main_mamalgam.o $(HILLVALLEA_OBJ_FILES) $(MOHILLVALLEA_OBJ_FILES) $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_OBJ_FILES) 
+
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) -c -o $@ $<

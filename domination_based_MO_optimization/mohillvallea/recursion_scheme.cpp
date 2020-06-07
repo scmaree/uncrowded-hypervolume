@@ -397,12 +397,14 @@ void hicam::recursion_scheme_t::run()
     
     // write also the pareto set
     char  string[1000];
-    sprintf(string, "%spareto_set%s.txt", write_directory.c_str(), file_appendix.c_str());
+    sprintf(string, "%spareto_set%s.dat", write_directory.c_str(), file_appendix.c_str());
 
     fitness_function->pareto_set.writeToFile(string);
     
     writeGenerationalSolutions(*approximation_set, true, number_of_solution_sets_written);
   }
+
+  run_time = getTimer();
   
 }
 
@@ -614,7 +616,7 @@ void hicam::recursion_scheme_t::writeGenerationalStatisticsForOnePopulation(cons
   if (write_header)
   {
 
-    sprintf(string, "%sstatistics%s.txt", write_directory.c_str(), file_appendix.c_str());
+    sprintf(string, "%sstatistics%s.dat", write_directory.c_str(), file_appendix.c_str());
     file = fopen(string, "w");
 
     sprintf(string, "# Generation  Evaluations   Time (s)");
@@ -630,7 +632,7 @@ void hicam::recursion_scheme_t::writeGenerationalStatisticsForOnePopulation(cons
 
   }
   else {
-    sprintf(string, "%sstatistics%s.txt", write_directory.c_str(), file_appendix.c_str());
+    sprintf(string, "%sstatistics%s.dat", write_directory.c_str(), file_appendix.c_str());
     file = fopen(string, "a");
   }
 
@@ -776,10 +778,10 @@ void hicam::recursion_scheme_t::writeGenerationalSolutions(elitist_archive_t & a
 
   // Approximation set
   if (final) {
-    sprintf(string, "%sapproximation_set_final%s.txt", write_directory.c_str(), file_appendix.c_str());
+    sprintf(string, "%sapproximation_set_final%s.dat", write_directory.c_str(), file_appendix.c_str());
   }
   else {
-    sprintf(string, "%sapproximation_set_generation%s_%05d.txt", write_directory.c_str(), file_appendix.c_str(), number_of_solution_sets_written);
+    sprintf(string, "%sapproximation_set_generation%s_%05d.dat", write_directory.c_str(), file_appendix.c_str(), number_of_solution_sets_written);
   }
   
   //hvc_pt hvc = std::make_shared<hvc_t>(fitness_function);
@@ -797,7 +799,7 @@ void hicam::recursion_scheme_t::writePopulation(size_t population_index, const o
 {
   char  string[1000];
   
-  sprintf(string, "%spopulation_%05zu_generation_%05d%s.txt", write_directory.c_str(), population_index, optimizer.number_of_generations-1, file_appendix.c_str());
+  sprintf(string, "%spopulation_%05zu_generation_%05d%s.dat", write_directory.c_str(), population_index, optimizer.number_of_generations-1, file_appendix.c_str());
   
   population_t population;
   population.collectSolutions(optimizer.subpopulations);

@@ -73,5 +73,51 @@ In BezEA, approximation sets are parameterized as a set of solutions that lie on
 
 BezEA had one additional input, which is the number of control points of the Bezier curve. When using 2 points (as shown here), the approximation set is a straight line segment in decision space. BezEA works well for a small number of control points. It is always suggested to set the number of points on the front (here: 9) larger than the number of control points.
 
+### MO-GOMEA
+Multi-objective (real-valued) Gene-pool optimal mixing (MO-GOMEA), as introduced in,
+
+> A. Bouter, N.H. Luong, C. Witteveen, T. Alderliesten, and P.A.N. Bosman. The multi-objective real-valued 
+> gene-pool optimal mixing evolutionary algorithm, GECCO 2017
+
+MO-GOMEA can be run with
+
+`./mogomea -s -v 26 10 -10 10 200 1000 9 100000 60 0 1234 "./"`
+
+MO-GOMEA is a domination-based algorithm that does not explitly optimize the hypervolume. Especially, it uses a population during optimization, and additionally, it collects all non-dominated solutions in an elitist archive. A small number of the solutions in this archive are placed back into the population every generation. It therefore helps to set the elitist size not too small. A recommended size is 1000. Additionally, after optimization, an approximation set is formed. This can be set very small, e.g. 9, to be able to compare performance of MO-GOMEA to the hypervolume-based methods (here: 9). As MO-GOMEA does not explicitly optimize the hypervolume of the approximation set (or elitist archive/population), it cannot obtain the same value-to-reach that the UHV-based algorithms obtain. However, it can obtain better hypervolume values when the approximation set size is larger, which does not influence the required number of function evaluations (but it does affect runtime).
+
+*Note: This is not the officiel implementation of MO-GOMEA. The ability to exploit partial evaluations is not implemented in this version. For the implementation of the original authors, have a look at https://homepages.cwi.nl/~bosman/source_code.php*
+
+### MAMaLGaM (and MO-HillVallEA)
+The domination-based multi-objective AMaLGaM (MAMaLGaM) is an implementation of the algorithm described in,
+
+> S. Rodrigues, P. Bauer, and P.A.N. Bosman. A Novel Population-based Multi-Objective CMA-ES and the 
+> Impact of Different Constraint Handling Techniques, GECCO 2014.
+
+MAMaLGaM can be run by,
+
+` ./mamalgam -s -v 26 10 -10 10 200 1000 9 100000 60 0 1234 "./"`
+
+By enabling niching, MAMaLGaM performs multi-modal optimization, and thereby aims to obtain all solutions in the Pareto set, by explicitly clustering the elitist archive and the population. For this, hill-valley clustering is used, and the resulting algorithm is called the multi-objective evolutionary algorithm (MO-HillVallEA), and is published in,
+
+> S.C. Maree, T. Alderliesten, and P.A.N. Bosman. Real-valued Evolutionary Multi-modal
+> Multi-objective Optimization by Hill-valley Clustering, GECCO 2019
+
+Both algorithms use the same input parameters as MO-GOMEA.
+
+*Note: Several adaptations and corrections have been implemented in MAMaLGaM compared to the algorithm described by Rodrigues et al.*
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
