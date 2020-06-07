@@ -97,12 +97,12 @@ MAMaLGaM can be run by,
 
 ` ./mamalgam -s -v 26 10 -10 10 200 1000 9 100000 60 0 1234 "./"`
 
-By enabling niching, MAMaLGaM performs multi-modal optimization, and thereby aims to obtain all solutions in the Pareto set, by explicitly clustering the elitist archive and the population. For this, hill-valley clustering is used, and the resulting algorithm is called the multi-objective evolutionary algorithm (MO-HillVallEA), and is published in,
+By enabling niching `-n`, MAMaLGaM performs multi-modal optimization, and thereby aims to obtain all solutions in the Pareto set, by explicitly clustering the elitist archive and the population into clusters that each reside in a single mode. For this, hill-valley clustering is used, and the resulting algorithm is called the multi-objective evolutionary algorithm (MO-HillVallEA), and is published in,
 
 > S.C. Maree, T. Alderliesten, and P.A.N. Bosman. Real-valued Evolutionary Multi-modal
 > Multi-objective Optimization by Hill-valley Clustering, GECCO 2019
 
-Both algorithms use the same input parameters as MO-GOMEA.
+Both algorithms use the same input parameters as MO-GOMEA, and are also domination-based, so do not converge to the optimal hypervolume (see explanation for MO-GOMEA above). 
 
 *Note: Several adaptations and corrections have been implemented in MAMaLGaM compared to the algorithm described by Rodrigues et al.*
 
