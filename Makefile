@@ -51,7 +51,7 @@ mamalgam: ./domination_based_MO_optimization/main_mamalgam.o  $(HILLVALLEA_OBJ_F
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 clean:
-	rm -f $(HILLVALLEA_OBJ_FILES) $(HILLVALLEA_DEP_FILES) $(MOHILLVALLEA_OBJ_FILES)  $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(MOHILLVALLEA_DEP_FILES) $(GOMEA_DEP_FILES) $(BENCHMARK_DEP_FILES) $(WFG_BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_dep_FILES) ./hv_based_MO_optimization/*.d ./hv_based_MO_optimization/*.o
+	rm -f $(HILLVALLEA_OBJ_FILES) $(HILLVALLEA_DEP_FILES) $(MOHILLVALLEA_OBJ_FILES)  $(GOMEA_OBJ_FILES) $(BENCHMARK_OBJ_FILES) $(MOHILLVALLEA_DEP_FILES) $(GOMEA_DEP_FILES) $(BENCHMARK_DEP_FILES) $(WFG_BENCHMARK_OBJ_FILES) $(WFG_BENCHMARK_DEP_FILES) ./hv_based_MO_optimization/*.d ./hv_based_MO_optimization/*.o ./domination_based_MO_optimization/*.d ./domination_based_MO_optimization/*.o
 
 clean_runlogs:
 	rm -f *.dat
