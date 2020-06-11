@@ -36,6 +36,8 @@ namespace hicam
     
     // gradient stuff
     std::vector<vec_t> gradients;
+    std::vector<vec_t> adam_mt;
+    std::vector<vec_t> adam_vt;
     
     // brachy stuff
     vec_t dvis;

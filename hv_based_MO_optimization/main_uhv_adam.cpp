@@ -14,7 +14,6 @@ T.M. Deist, S.C. Maree, T. Alderliesten, P.A.N. Bosman, PPSN-2020
 
 #include "HillVallEA/sofomore.hpp"
 #include "HillVallEA/adam.hpp"
-#include "HillVallEA/uhvgrad.hpp"
 #include "HillVallEA/hillvallea.hpp"
 #include "HillVallEA/fitness.h"
 #include "HillVallEA/mathfunctions.hpp"
@@ -28,6 +27,8 @@ T.M. Deist, S.C. Maree, T. Alderliesten, P.A.N. Bosman, PPSN-2020
 
 
 // all setting variables
+int optimizer_type;
+int local_optimizer_index;
 int problem_index;
 size_t mo_number_of_parameters;
 size_t number_of_test_points;
@@ -66,7 +67,7 @@ bool print_generational_statistics;
 
 void printUsage(void)
 {
-  printf("Usage: uhv_grad [-?] [-P] [-s] [-w] [-v] [-f] [-e] [-r] pro dim ssize low upp ela eva sec vtr rnd wrp\n"); // [-n] opt pop
+  printf("Usage: uhv_grad [-?] [-P] [-s] [-w] [-v] [-f] [-e] [-r] opt pro dim ssize low upp ela eva sec vtr rnd wrp\n"); // [-n] pop
   printf(" -?: Prints out this usage information.\n");
   printf(" -P: Prints out a list of all installed optimization problems.\n");
   printf(" -s: Enables computing and writing of statistics every generation.\n");
@@ -77,7 +78,7 @@ void printUsage(void)
   printf(" -f: Force use of finite differences instead of analytical gradient.\n");
   printf(" -r: Enables use of vtr (value-to-reach) termination condition based on the hypervolume.\n");
   printf("\n");
-//  printf("  opt: Gradient method (0 = ADAM, 1 = GAMO).\n");
+  printf("  opt: Gradient method (0 = ADAM, 1 = GAMO).\n");
   printf("  pro: Multi-objective optimization problem index (minimization).\n");
   printf("  dim: Number of parameters (if the problem is configurable).\n");
   printf("ssize: Solution set size (number of solutions on the front).\n");
@@ -177,7 +178,7 @@ void parseParameters(int argc, char **argv, int *index)
 {
   int noError;
   
-  int n_params = 11;
+  int n_params = 12;
   if ((argc - *index) != n_params)
   {
     printf("Number of parameters is incorrect, require %d parameters (you provided %d).\n\n", n_params, (argc - *index));
@@ -187,19 +188,19 @@ void parseParameters(int argc, char **argv, int *index)
   
   noError = 1;
 
-//  noError = noError && sscanf(argv[*index + 0], "%u", &optimizer_type);
-  noError = noError && sscanf(argv[*index + 0], "%d", &problem_index);
-  noError = noError && sscanf(argv[*index + 1], "%zd", &mo_number_of_parameters);
-  noError = noError && sscanf(argv[*index + 2], "%zd", &number_of_test_points);
-  noError = noError && sscanf(argv[*index + 3], "%lf", &lower_init);
-  noError = noError && sscanf(argv[*index + 4], "%lf", &upper_init);
+  noError = noError && sscanf(argv[*index + 0], "%u", &optimizer_type);
+  noError = noError && sscanf(argv[*index + 1], "%d", &problem_index);
+  noError = noError && sscanf(argv[*index + 2], "%zd", &mo_number_of_parameters);
+  noError = noError && sscanf(argv[*index + 3], "%zd", &number_of_test_points);
+  noError = noError && sscanf(argv[*index + 4], "%lf", &lower_init);
+  noError = noError && sscanf(argv[*index + 5], "%lf", &upper_init);
   // noError = noError && sscanf(argv[*index + 6], "%zd", &popsize);
-  noError = noError && sscanf(argv[*index + 5], "%zu", &elitist_archive_size_target);
-  noError = noError && sscanf(argv[*index + 6], "%d", &maximum_number_of_mo_evaluations);
-  noError = noError && sscanf(argv[*index + 7], "%d", &maximum_number_of_seconds);
-  noError = noError && sscanf(argv[*index + 8], "%lf", &value_to_reach);
-  noError = noError && sscanf(argv[*index + 0], "%d", &random_seed);
-  write_directory = argv[*index + 10];
+  noError = noError && sscanf(argv[*index + 6], "%zu", &elitist_archive_size_target);
+  noError = noError && sscanf(argv[*index + 7], "%d", &maximum_number_of_mo_evaluations);
+  noError = noError && sscanf(argv[*index + 8], "%d", &maximum_number_of_seconds);
+  noError = noError && sscanf(argv[*index + 9], "%lf", &value_to_reach);
+  noError = noError && sscanf(argv[*index + 10], "%d", &random_seed);
+  write_directory = argv[*index + 11];
   
   if (!noError)
   {
@@ -211,6 +212,21 @@ void parseParameters(int argc, char **argv, int *index)
 
 void checkOptions(void)
 {
+  if(optimizer_type == 0 || optimizer_type == 1 )
+  {
+    if(optimizer_type == 0) {
+      local_optimizer_index = 50; // ADAM
+    } else {
+      local_optimizer_index = 64; // GAMO
+    }
+  } else {
+    printf("\n");
+    printf("Error: optimizer type invalid (read: %d).", optimizer_type);
+    printf("\n\n");
+    
+    exit(0);
+  }
+  
   mo_fitness_function = getObjectivePointer(problem_index);
   if (mo_fitness_function == nullptr)
   {
@@ -286,7 +302,7 @@ void checkOptions(void)
   
   // File appendix for writing
   std::stringstream ss;
-  ss << "_problem" << problem_index << "_p" << number_of_reference_points << "_run" << std::setw(3) << std::setfill('0') << random_seed;
+  ss << "_opt" << optimizer_type << "_problem" << problem_index << "_p" << number_of_reference_points << "_run" << std::setw(3) << std::setfill('0') << random_seed;
   file_appendix = ss.str();
 
 }
@@ -329,35 +345,37 @@ int main(int argc, char **argv)
   }
   
   // set SO problem
-  // hillvallea::fitness_pt fitness_function = std::make_shared<hillvallea::UHV_t>(mo_fitness_function, number_of_reference_points, collect_all_mo_sols_in_archive, elitist_archive_size_target, nullptr, use_finite_differences);
+  hillvallea::fitness_pt fitness_function = std::make_shared<hillvallea::UHV_t>(mo_fitness_function, number_of_reference_points, collect_all_mo_sols_in_archive, elitist_archive_size_target, nullptr, use_finite_differences);
   
-  // hillvallea::vec_t lower_init_ranges, upper_init_ranges;
-  // lower_init_ranges.resize(fitness_function->number_of_parameters, lower_init);
-  // upper_init_ranges.resize(fitness_function->number_of_parameters, upper_init);
+  hillvallea::vec_t lower_init_ranges, upper_init_ranges;
+  lower_init_ranges.resize(fitness_function->number_of_parameters, lower_init);
+  upper_init_ranges.resize(fitness_function->number_of_parameters, upper_init);
   
   std::stringstream ss;
   ss << "_UHVGRAD" << file_appendix;
   file_appendix = ss.str();
   
   if(print_verbose_overview) {
-    std::cout << "Optimizer settings: \n\tUHVgrad\n\tMO_solutions = " << number_of_test_points << "\n\tpopsize = " << popsize << "\n\trandom_seed = " << random_seed << "\n";
+    std::cout << "Optimizer settings: \n\t" << (optimizer_type == 0 ? "ADAM" : "GAMO" ) << " \n\tlocal_optimizer_index = " << local_optimizer_index << "\n\ttest_points = " << number_of_test_points << "\n\tnumber_of_reference_points = " << number_of_reference_points << "\n\tso_number_of_parameters = " << fitness_function->number_of_parameters << "\n\tuse_finite_differences = " << (use_finite_differences ? "yes" : "no") << "\n\tpopsize = " << popsize << "\n\tenable_niching = " << (enable_niching ? "yes" : "no") << "\n\trandom_seed = " << random_seed << "\n";
   }
-
-  hicam::vec_t lower_init_ranges, upper_init_ranges;
-  lower_init_ranges.resize(mo_fitness_function->number_of_parameters, lower_init);
-  upper_init_ranges.resize(mo_fitness_function->number_of_parameters, upper_init);
   
-  hillvallea::uhvgrad_t opt(
-                         mo_fitness_function,
-                         number_of_reference_points,
+  if(use_vtr == 2) // IGD-based VTR
+  {
+    fitness_function->redefine_vtr = true;
+  }
+  
+  // Internally, minimization is performed of -HV(X)
+  // Therefore, the HV-based VTR is negated
+  value_to_reach *= -1;
+  maximum_number_of_so_evaluations = (int) ( maximum_number_of_mo_evaluations / (double) number_of_reference_points );
+
+
+  hillvallea::adam_t opt(
+                         fitness_function,
+                         local_optimizer_index,
                          lower_init_ranges,
                          upper_init_ranges,
-                         collect_all_mo_sols_in_archive,
-                         elitist_archive_size_target,
-                         gamma_weight,
-                         use_finite_differences,
-                         finite_differences_multiplier,
-                         maximum_number_of_mo_evaluations,
+                         maximum_number_of_so_evaluations,
                          maximum_number_of_seconds,
                          value_to_reach,
                          use_vtr,
@@ -365,29 +383,31 @@ int main(int argc, char **argv)
                          write_generational_solutions,
                          write_generational_statistics,
                          write_directory,
-                         file_appendix
+                         file_appendix,
+                         gamma_weight,
+                         finite_differences_multiplier
                          );
   
   opt.run();
   
   if(print_verbose_overview)
   {
-    std::cout << "Best: \n\tHV = " << std::fixed << std::setprecision(14) << opt.best_hypervolume << "\n\tMO-fevals = " << mo_fitness_function->number_of_evaluations << "\n\truntime = " << double(clock() - opt.starting_time) / CLOCKS_PER_SEC << " sec" << std::endl;
+    std::cout << "Best: \n\tHV = " << std::fixed << std::setprecision(14) << -opt.best.f << "\n\tMO-fevals = " << mo_fitness_function->number_of_evaluations << "\n\truntime = " << double(clock() - opt.starting_time) / CLOCKS_PER_SEC << " sec" << std::endl;
     
     
     std::cout << "pareto_front" << (use_bezier_interpolation ? number_of_reference_points : 0) << " = [";
-    for(size_t k = 0; k < opt.best_mo_population->sols.size(); ++k) {
-      std::cout << "\n\t" << std::fixed << std::setw(10) << std::setprecision(4) << opt.best_mo_population->sols[k]->obj;
+    for(size_t k = 0; k < opt.best.mo_test_sols.size(); ++k) {
+      std::cout << "\n\t" << std::fixed << std::setw(10) << std::setprecision(4) << opt.best.mo_test_sols[k]->obj;
     }
     std::cout << " ];\n";
     
     
     std::cout << "pareto_set" << (use_bezier_interpolation ? number_of_reference_points : 0) << " = [";
-    for(size_t k = 0; k < opt.best_mo_population->sols.size(); ++k)
+    for(size_t k = 0; k < opt.best.mo_test_sols.size(); ++k)
     {
       std::cout << "\n\t";
-      for(size_t i = 0; i < opt.best_mo_population->sols[k]->param.size(); ++i) {
-        std::cout << std::fixed << std::setw(10) << std::setprecision(4) << opt.best_mo_population->sols[k]->param[i] << " ";
+      for(size_t i = 0; i < opt.best.mo_test_sols[k]->param.size(); ++i) {
+        std::cout << std::fixed << std::setw(10) << std::setprecision(4) << opt.best.mo_test_sols[k]->param[i] << " ";
       }
     }
     std::cout << " ];\n";

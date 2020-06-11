@@ -63,6 +63,15 @@ namespace hicam
     this->batch_size = -1;
     this->use_lex = false;
     this->doselist_update_required = true;
+    this->gradients.resize(number_of_objectives);
+    this->adam_mt.resize(number_of_objectives);
+    this->adam_vt.resize(number_of_objectives);
+    
+    for(size_t m = 0; m < number_of_objectives; ++m) {
+      this->gradients[m].resize(number_of_parameters, 0.0);
+      this->adam_mt[m].resize(number_of_parameters, 0.0);
+      this->adam_vt[m].resize(number_of_parameters, 0.0);
+    }
   }
 
   solution_t::solution_t(vec_t & param)
@@ -95,6 +104,12 @@ namespace hicam
     this->batch_size = -1;
     this->use_lex = false;
     this->doselist_update_required = true;
+    
+    for(size_t m = 0; m < obj.size(); ++m) {
+      this->gradients[m].resize(param.size(), 0.0);
+      this->adam_mt[m].resize(param.size(), 0.0);
+      this->adam_vt[m].resize(param.size(), 0.0);
+    }
   }
 
   solution_t::solution_t(const solution_t & other)
@@ -115,6 +130,8 @@ namespace hicam
     this->doselist_update_required = other.doselist_update_required;
     this->gradients = other.gradients;
     this->dvi_gradients = other.dvi_gradients;
+    this->adam_mt = other.adam_mt;
+    this->adam_vt = other.adam_vt;
   }
 
   // delete solution

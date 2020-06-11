@@ -14,7 +14,7 @@ Start by making a clone of the repository,
 
 ``` git clone https://github.com/SCMaree/uncrowded-hypervolume```
 
-Call `make` in the root directory to build the C++ project. This builds the following optimizers: `uhv_gomea`, `sofomore_gomea`, `uvh_grad` and `bezea`. Call `make clean` to clean all build files, and call `make clean_runlogs` to clean all runlogs (\*.dat) in the root directory that are generated during a run of an optimizer.
+Call `make` in the root directory to build the C++ project. This builds the following optimizers: `uhv_gomea`, `sofomore_gomea`, `uvh_grad` and `bezea`. Call `make clean` to clean all build files, and call `make clean_runlogs` to clean all runlogs (ALL \*.dat files) in the root directory that are generated during a run of an optimizer.
 
 ## A simple example
 
@@ -48,17 +48,22 @@ Sofomore-GOMEA does not require a linkage model to be specified (when the multi-
 
 *Note: In Sofomore-GOMEA, re-evaluation of all solutions is performed at the beginning of each generation. The current implementation is lazy in the sense that it also re-evaluates the multi-objective fitness values, which is not required. These evaluations are not counted in all counters, but when using this code in any other benchmarking setting, this needs to be fixed.*
 
-### UHV-Grad (gradient-based multi-objective optimization)
+### UHV-Grad (UHV-Adam) (gradient-based multi-objective optimization)
 Uncrowed hypervolume indicator can be used for efficient gradient-based multi-objective optimization, as described in,
 
 > Multi-objective Optimization by Uncrowded Hypervolume Gradient Ascent
 > by T. M. Deist, S.C. Maree, T. Alderliesten, P.A.N. Bosman, PPSN 2020 
 
-To run UHV-Grad on the example problem with ADAM as optimizer,
+To run UHV-Grad on the example problem (with ADAM as optimizer),
 
-`./uhv_grad -s -v -r 0 26 10 9 -10 10 1000 1000000 60 120.7876730749 1234 "./"`
+`./uhv_grad -s -v -r 26 10 9 -10 10 1000 1000000 60 120.7876730749 1234 "./"`
 
-The first input parameter specifies the gradient descent methods. Currently implemented are the well-known ADAM (0), which is recommended, and the GAMO (1) scheme, as described in the corresponding publication. If the flag `-f`, a finite difference approximation of the gradient is used. This flag is automatically activated when the provided problem has no gradients implemented. 
+If the flag `-f`, a finite difference approximation of the gradient is used. This flag is automatically activated when the provided problem has no gradients implemented. 
+
+
+Note: There is also a (less clean) implementation available that implements both the ADAM gradient scheme and the GA-MO scheme. The first input parameter specifies the gradient descent methods (ADAM  = 0, GA-MO = 1). It can be run with:
+
+`./uhv_adam -s -v -r 0 26 10 9 -10 10 1000 1000000 60 120.7876730749 1234 "./"`
 
 
 ### BezEA (smoothly navigable approximation sets)
