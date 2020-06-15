@@ -70,6 +70,7 @@ namespace hicam
     //----------------------------------------------------------------------------------------
     virtual void set_number_of_objectives(size_t & number_of_objectives);
     virtual void set_number_of_parameters(size_t & number_of_parameters);
+    virtual void set_number_of_radial(size_t & number_of_radial);
     virtual void get_param_bounds(vec_t & lower, vec_t & upper) const;
     virtual void define_problem_evaluation(solution_t & sol);
     virtual void define_partial_problem_evaluation(solution_t & sol, const std::vector<size_t> & touched_parameter_idx, const solution_t & old_sol);
