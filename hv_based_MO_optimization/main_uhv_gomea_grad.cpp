@@ -217,10 +217,10 @@ void checkOptions(void)
   if(linkage_model_index == 0 || linkage_model_index == 1 || linkage_model_index == 2)
   {
     switch (linkage_model_index) {
-      case 0: local_optimizer_index = 64; break; // marginal linkage
-      case 1: local_optimizer_index = 66; break; // linkage tree
-      case 2: local_optimizer_index = 50; break; // full linkage
-    default: local_optimizer_index = 64; break;
+      case 0: local_optimizer_index = 84; break; // marginal linkage
+      case 1: local_optimizer_index = 86; break; // linkage tree
+      case 2: local_optimizer_index = 80; break; // full linkage
+    default: local_optimizer_index = 84; break;
     }
   } else {
     printf("\n");
@@ -362,12 +362,12 @@ int main(int argc, char **argv)
   upper_init_ranges.resize(fitness_function->number_of_parameters, upper_init);
 
   std::stringstream ss;
-  ss << "_UVHGOMEA" << file_appendix;
+  ss << "_UVHGOMEAGrad" << file_appendix;
   file_appendix = ss.str();
   
   
   if(print_verbose_overview) {
-    std::cout << "Optimizer settings: \n\tUHV-GOMEA\n\tlocal_optimizer_index = " << local_optimizer_index << "\n\ttest_points = " << number_of_test_points << "\n\tnumber_of_reference_points = " << number_of_reference_points << "\n\tso_number_of_parameters = " << fitness_function->number_of_parameters << "\n\tuse_finite_differences = " << (use_finite_differences ? "yes" : "no") << "\n\tpopsize = " << popsize << "\n\tenable_niching = " << (enable_niching ? "yes" : "no") << "\n\trandom_seed = " << random_seed << "\n";
+    std::cout << "Optimizer settings: \n\tUHV-GOMEA-Grad\n\tlocal_optimizer_index = " << local_optimizer_index << "\n\ttest_points = " << number_of_test_points << "\n\tnumber_of_reference_points = " << number_of_reference_points << "\n\tso_number_of_parameters = " << fitness_function->number_of_parameters << "\n\tuse_finite_differences = " << (use_finite_differences ? "yes" : "no") << "\n\tpopsize = " << popsize << "\n\tenable_niching = " << (enable_niching ? "yes" : "no") << "\n\trandom_seed = " << random_seed << "\n";
   }
   
   if(use_vtr == 2) // IGD-based VTR

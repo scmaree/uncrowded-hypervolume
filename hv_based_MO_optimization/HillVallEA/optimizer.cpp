@@ -45,7 +45,9 @@ hillvallea::optimizer_pt hillvallea::init_optimizer(const int local_optimizer_in
     case 66: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 66, fitness_function, rng); break; // GOMEA dynamic linkage tree & intermediate_updates
     case 74: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 74, fitness_function, rng); break; // GOMEA static conditional linkage tree & with UB & (from distance matrix) & intermediate_updates
     case 76: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 76, fitness_function, rng); break; // GOMEA learn conditional marginal linkage (from distance matrix) & intermediate_updates
+    case 80: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 80, fitness_function, rng); break; // GOMEA with gradient descent step
     case 84: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 84, fitness_function, rng); break; // GOMEA with gradient descent step
+    case 86: return std::make_shared<gomea_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, 86, fitness_function, rng); break; // GOMEA with gradient descent step
     default: return std::make_shared<amalgam_t>(number_of_parameters, lower_param_bounds, upper_param_bounds, init_univariate_bandwidth, fitness_function, rng, true); break;
   }
 

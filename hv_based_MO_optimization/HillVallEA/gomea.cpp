@@ -112,9 +112,23 @@ hillvallea::gomea_t::gomea_t(const size_t number_of_parameters, const vec_t & lo
       learn_linkage_tree_from_distance_matrix = true;
       sample_conditionally = true;
       break;
-    case 84: // hybrid of 64 with gradient step (ADAM)
+    case 80: // full linkage model with gradient step
       static_linkage = true;
-      FOS_element_ub = FOS_element_lb;
+      random_linkage = true;
+      FOS_element_lb = (int) number_of_parameters;
+      FOS_element_ub = (int) number_of_parameters;
+      gradient_step = true;
+      break;
+    case 84: // static marginal product linkage model from distance matrix (if available)
+      static_linkage = true;
+      FOS_element_lb = (int) fitness_function->covariance_block_size;
+      FOS_element_ub = (int) fitness_function->covariance_block_size;
+      learn_linkage_tree_from_distance_matrix = true;
+      gradient_step = true;
+      break;
+    case 86: // non-static filtered LT from distance matrix (if available) with gradient step
+      static_linkage = false;
+      dynamic_filter_large_FOS_elements = true;
       learn_linkage_tree_from_distance_matrix = true;
       gradient_step = true;
       break;
@@ -226,8 +240,12 @@ void hillvallea::gomea_t::initialize_from_population(population_pt pop, size_t t
         if(pop->sols[i]->param[j] > upper_param_range[j]) { upper_param_range[j] = pop->sols[i]->param[j]; }
       }
     }
-    for(size_t i = 0; i < gradient_methods.size(); ++i) {
-      gradient_methods[i] = std::make_shared<adam_t>(fitness_function, 50, lower_param_range, upper_param_range, -1, -1, false, 0.0, 1234, false, false, "","",0.01,1e-8);
+    for(size_t i = 0; i < gradient_methods.size(); ++i)
+    {
+      // note: all parameters are disabled here, as we do not use the generational loop at all, but just request the gradient offspring.
+      double gamma_weight = 0.01;
+      double finite_differences_multiplier = 1e-6;
+      gradient_methods[i] = std::make_shared<adam_t>(fitness_function, 50, lower_param_range, upper_param_range, -1, -1, 0.0, false, 1234, false, false, "","",gamma_weight,finite_differences_multiplier);
       gradient_methods[i]->accept_only_improvements = false;
     }
   }
@@ -1391,11 +1409,9 @@ namespace hillvallea
       }
     }
     
-    // adam step
+    // gradient step (ADAM)
     if(gradient_step)
     {
-      // banaan
-      
       // full steps
       std::vector<std::vector<size_t> > touched_parameter_idx(1);
       touched_parameter_idx[0].resize(number_of_parameters);
@@ -1403,7 +1419,6 @@ namespace hillvallea
         touched_parameter_idx[0][i] = i;
       }
 
-      
       for(size_t i = 0;  i < population_size; ++i) {
         vec_t gammas(1, gradient_methods[i]->gamma);
         weighted_number_of_evaluations += gradient_methods[i]->gradientOffspring(pop->sols[i], touched_parameter_idx, gammas);

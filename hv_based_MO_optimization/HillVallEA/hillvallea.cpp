@@ -1512,7 +1512,7 @@ namespace hillvallea
     elitist_archive.clear();
     int best_written_prev_fevals = 0;
     
-    if (local_optimizer_index == 84) {
+    if (local_optimizer_index == 80 || local_optimizer_index == 84 || local_optimizer_index == 86) {
       evalute_with_gradients = true;
     }
     

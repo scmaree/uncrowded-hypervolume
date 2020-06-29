@@ -90,7 +90,7 @@ MO-GOMEA can be run with
 
 MO-GOMEA is a domination-based algorithm that does not explitly optimize the hypervolume. Especially, it uses a population during optimization, and additionally, it collects all non-dominated solutions in an elitist archive. A small number of the solutions in this archive are placed back into the population every generation. It therefore helps to set the elitist size not too small. A recommended size is 1000. Additionally, after optimization, an approximation set is formed. This can be set very small, e.g. 9, to be able to compare performance of MO-GOMEA to the hypervolume-based methods (here: 9). As MO-GOMEA does not explicitly optimize the hypervolume of the approximation set (or elitist archive/population), it cannot obtain the same value-to-reach that the UHV-based algorithms obtain. However, it can obtain better hypervolume values when the approximation set size is larger, which does not influence the required number of function evaluations (but it does affect runtime).
 
-*Note: This is not the officiel implementation of MO-GOMEA. The ability to exploit partial evaluations is not implemented in this version. For the implementation of the original authors, have a look at https://homepages.cwi.nl/~bosman/source_code.php*
+*Note: This is not the official implementation of MO-GOMEA. The ability to exploit partial evaluations is not implemented in this version. For the implementation of the original authors, have a look at https://homepages.cwi.nl/~bosman/source_code.php*
 
 ### MAMaLGaM (and MO-HillVallEA)
 The domination-based multi-objective AMaLGaM (MAMaLGaM) is an implementation of the algorithm described in,

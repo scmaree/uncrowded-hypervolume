@@ -367,7 +367,7 @@ int main(int argc, char **argv)
   
   
   if(print_verbose_overview) {
-    std::cout << "Optimizer settings: \n\tSOHV\n\tlocal_optimizer_index = " << local_optimizer_index << "\n\ttest_points = " << number_of_test_points << "\n\tnumber_of_reference_points = " << number_of_reference_points << "\n\tso_number_of_parameters = " << fitness_function->number_of_parameters << "\n\tuse_finite_differences = " << (use_finite_differences ? "yes" : "no") << "\n\tpopsize = " << popsize << "\n\tenable_niching = " << (enable_niching ? "yes" : "no") << "\n\trandom_seed = " << random_seed << "\n";
+    std::cout << "Optimizer settings: \n\tBezEA\n\tlocal_optimizer_index = " << local_optimizer_index << "\n\ttest_points = " << number_of_test_points << "\n\tnumber_of_reference_points = " << number_of_reference_points << "\n\tso_number_of_parameters = " << fitness_function->number_of_parameters << "\n\tuse_finite_differences = " << (use_finite_differences ? "yes" : "no") << "\n\tpopsize = " << popsize << "\n\tenable_niching = " << (enable_niching ? "yes" : "no") << "\n\trandom_seed = " << random_seed << "\n";
   }
   
   if(use_vtr == 2) // IGD-based VTR
