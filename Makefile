@@ -1,5 +1,6 @@
 CC = g++
 CFLAGS = -std=c++11 -O3 -MMD 
+# CFLAGS = -std=c++11 -g -MMD
 
 HILLVALLEA_DIR := ./hv_based_MO_optimization/HillVallEA
 HILLVALLEA_SRC_FILES := $(wildcard $(HILLVALLEA_DIR)/*.cpp)

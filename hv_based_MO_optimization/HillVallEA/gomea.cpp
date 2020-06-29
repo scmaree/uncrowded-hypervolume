@@ -1420,10 +1420,15 @@ namespace hillvallea
       }
 
       for(size_t i = 0;  i < population_size; ++i) {
+	if (gradient_methods[i]->number_of_generations == 0) {
+	  gradient_methods[i]->best = solution_t(*pop->sols[i]);
+	}
+
         vec_t gammas(1, gradient_methods[i]->gamma);
         weighted_number_of_evaluations += gradient_methods[i]->gradientOffspring(pop->sols[i], touched_parameter_idx, gammas);
         gradient_methods[i]->gamma = gammas[0];
-        
+        gradient_methods[i]->number_of_generations++;
+
         if(solution_t::better_solution(*pop->sols[i], best)) {
           best = solution_t(*pop->sols[i]);
         }
