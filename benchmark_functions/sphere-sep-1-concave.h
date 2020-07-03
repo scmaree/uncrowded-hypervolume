@@ -24,6 +24,7 @@ namespace hicam
       number_of_parameters = 2; // default, can be adapted
       
       partial_evaluations_available = false;
+      analytical_gradient_available = true;
 
       hypervolume_max_f0 = 11;
       hypervolume_max_f1 = 11;

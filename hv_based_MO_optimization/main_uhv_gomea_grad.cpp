@@ -401,7 +401,7 @@ int main(int argc, char **argv)
   
   if(print_verbose_overview)
   {
-    std::cout << "Best: \n\tHV = " << std::fixed << std::setprecision(14) << -opt.best.f << "\n\tMO-fevals = " << opt.number_of_evaluations * number_of_reference_points << "\n\truntime = " << double(clock() - opt.starting_time) / CLOCKS_PER_SEC << " sec" << std::endl;
+    std::cout << "Best: \n\tHV = " << std::fixed << std::setprecision(14) << -opt.best.f << "\n\tMO-fevals = " << mo_fitness_function->number_of_evaluations << "\n\truntime = " << double(clock() - opt.starting_time) / CLOCKS_PER_SEC << " sec" << std::endl;
     
     
     std::cout << "pareto_front" << (use_bezier_interpolation ? number_of_reference_points : 0) << " = [";

@@ -438,14 +438,14 @@ namespace hillvallea
     solution_t dummy_old_sol;
     bool partial_evaluation = false;
     bool compute_gradients = true;
-    double finite_differences_step_size = 0;
+    double finite_differences_step_size = 1e-15;
     compute_fitness(partial_evaluation, compute_gradients, sol, dummy_touched_parameter_idx, dummy_old_sol, finite_differences_step_size);
   }
   
   void UHV_t::define_partial_problem_evaluation_with_gradients(solution_t & sol, const std::vector<size_t> & touched_parameter_idx, const solution_t & old_sol) {
     bool partial_evaluation = true;
     bool compute_gradients = true;
-    double finite_differences_step_size = 0;
+    double finite_differences_step_size = 1e-15;
     compute_fitness(partial_evaluation, compute_gradients, sol, touched_parameter_idx, old_sol, finite_differences_step_size);
   }
   
