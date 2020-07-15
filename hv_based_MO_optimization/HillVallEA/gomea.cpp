@@ -467,6 +467,10 @@ namespace hillvallea
       FOS_index++;
     }
     
+    if(number_of_parameters == 1) {
+      return (new_FOS);
+    }
+    
     // Initialize similarity matrix
     //-------------------------------------------
     matrix_t S_matrix;

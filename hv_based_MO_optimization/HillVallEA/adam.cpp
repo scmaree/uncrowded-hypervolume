@@ -82,7 +82,10 @@ namespace hillvallea
     
     gamma = init_gamma * gamma_weight;
     this->finite_differences_multiplier = finite_differences_multiplier;
+    number_of_evaluations = 0;
+    weighted_number_of_evaluations = 0;
     number_of_generations = 0;
+    no_improvement_stretch = 0;
   }
 
   adam_t::~adam_t() { }
