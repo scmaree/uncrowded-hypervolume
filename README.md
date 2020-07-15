@@ -46,8 +46,6 @@ The Sofomore framework is introduced in *Uncrowded Hypervolume Improvement: COMO
 
 Sofomore-GOMEA does not require a linkage model to be specified (when the multi-objective problem is considered to be a black-box), and the remainder of the inputs is the same as for `uhv_gomea`.
 
-*Note: In Sofomore-GOMEA, re-evaluation of all solutions is performed at the beginning of each generation. The current implementation is lazy in the sense that it also re-evaluates the multi-objective fitness values, which is not required. These evaluations are not counted in all counters, but when using this code in any other benchmarking setting, this needs to be fixed.*
-
 ### UHV-Grad (UHV-Adam) (gradient-based multi-objective optimization)
 Uncrowed hypervolume indicator can be used for efficient gradient-based multi-objective optimization, as described in,
 

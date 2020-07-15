@@ -288,10 +288,6 @@ namespace hillvallea
       }
     }
     
-    // sort sols
-    std::sort(mo_population->sols.begin(), mo_population->sols.end(), hicam::solution_t::strictly_better_solution_via_pointers_obj0_unconstraint);
-    
-    
     // allocate shadow populations
     //---------------------------------------------
     std::vector<population_pt> shadow_populations(number_of_mo_solutions);
@@ -303,7 +299,7 @@ namespace hillvallea
       
       // init a new SO sol, with params from the MO sol.
       solution_pt sol = std::make_shared<solution_t>(fitness_function->number_of_parameters);
-      sol->mo_reference_sols.push_back(std::make_shared<hicam::solution_t>(*mo_population->sols[0])); // push a COPY of the reference sol to MO_reference_sols.
+      sol->mo_reference_sols.push_back(std::make_shared<hicam::solution_t>(*mo_population->sols[k])); // push a COPY of the reference sol to MO_reference_sols.
       
       for(size_t d = 0; d < fitness_function->number_of_parameters; ++d) {
         sol->param[d] = sol->mo_reference_sols[0]->param[d];
@@ -342,8 +338,6 @@ namespace hillvallea
         }
       }
       
-      std::sort(temp_pop->sols.begin(), temp_pop->sols.end(), hicam::solution_t::strictly_better_solution_via_pointers_obj0_unconstraint);
-      
       // make a SO-sol from the MO-sol and push it back to its corresponding shadow population
       for(size_t k = 0; k < shadow_populations.size(); ++k)
       {
@@ -369,6 +363,7 @@ namespace hillvallea
       // hicam::solution_pt hold_out_sol = mo_population->sols[k];
       mo_population->sols[k] = nullptr;
       for(size_t i = 0; i < shadow_populations[k]->sols.size(); ++i) {
+        shadow_populations[k]->sols[i]->constraint = -1; // prevents the mo fitness function from being re-evaluated
         fitness_function->evaluate(shadow_populations[k]->sols[i]);
       }
       
@@ -460,10 +455,10 @@ namespace hillvallea
         mo_population->sols[k] = nullptr;
         
         // update population
-        // do not count these evalutations, as the MO-sol is not re-evaluated
-        // re-evaluating the best is crucial, re-evaluating the remaining solutions only marginally improves the method.
+        local_optimizers[k]->best.constraint = -1; // by setting the constraint to -1, the MO fitness is not re-evaluated.
         fitness_function->evaluate(local_optimizers[k]->best);
         for(size_t i = 0; i < local_optimizers[k]->pop->size(); ++i) {
+          local_optimizers[k]->pop->sols[i]->constraint = -1; // by setting the constraint to -1, the MO fitness is not re-evaluated.
           fitness_function->evaluate(local_optimizers[k]->pop->sols[i]);
         }
         

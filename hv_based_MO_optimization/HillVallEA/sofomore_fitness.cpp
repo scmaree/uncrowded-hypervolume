@@ -129,22 +129,30 @@ namespace hillvallea
 
     // reset solution.
     sol.f = 0.0;
-    sol.constraint = 0.0;
+    // sol.constraint = 0.0;
     
     //-----------------------------------------
     // reconstruct & evaluate MO_params in sol.mo_reference_sols[0]
 
-    sol.mo_reference_sols.clear();
-    sol.mo_reference_sols.push_back(std::make_shared<hicam::solution_t>());
-    
-    // copy params
-    sol.mo_reference_sols[0]->param.resize(sol.param.size());
-    for(size_t i = 0; i < sol.param.size(); ++i) {
-      sol.mo_reference_sols[0]->param[i] = sol.param[i];
+    // evaluate (if needed)
+    if(sol.mo_reference_sols.size() != 1 || sol.constraint != -1) {
+      
+      if( sol.mo_reference_sols.size() != 1 && sol.constraint == -1) {
+        std::cout << "werido";
+      }
+      
+      sol.mo_reference_sols.clear();
+      sol.mo_reference_sols.push_back(std::make_shared<hicam::solution_t>());
+      
+      // copy params
+      sol.mo_reference_sols[0]->param.resize(sol.param.size());
+      for(size_t i = 0; i < sol.param.size(); ++i) {
+        sol.mo_reference_sols[0]->param[i] = sol.param[i];
+      }
+      
+      mo_fitness_function->evaluate(sol.mo_reference_sols[0]);
     }
-    
-    // evaluate
-    mo_fitness_function->evaluate(sol.mo_reference_sols[0]);
+    sol.constraint = 0.0; // reset constraint value
     
     if(collect_all_mo_sols_in_archive) {
       elitist_archive->updateArchive(sol.mo_reference_sols[0],true);
