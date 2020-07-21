@@ -198,7 +198,7 @@ void parseParameters(int argc, char **argv, int *index)
   noError = noError && sscanf(argv[*index + 6], "%d", &maximum_number_of_mo_evaluations);
   noError = noError && sscanf(argv[*index + 7], "%d", &maximum_number_of_seconds);
   noError = noError && sscanf(argv[*index + 8], "%lf", &value_to_reach);
-  noError = noError && sscanf(argv[*index + 0], "%d", &random_seed);
+  noError = noError && sscanf(argv[*index + 9], "%d", &random_seed);
   write_directory = argv[*index + 10];
   
   if (!noError)
@@ -283,7 +283,10 @@ void checkOptions(void)
   number_of_subgenerations_per_population_factor = 2;
   maximum_number_of_populations = 1;
 
-  
+  if(random_seed < 0) {
+    random_seed = (int) clock();
+  }
+
   // File appendix for writing
   std::stringstream ss;
   ss << "_problem" << problem_index << "_p" << number_of_reference_points << "_run" << std::setw(3) << std::setfill('0') << random_seed;

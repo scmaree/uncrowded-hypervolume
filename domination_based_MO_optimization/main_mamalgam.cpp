@@ -250,7 +250,10 @@ void checkOptions(void)
   number_of_subgenerations_per_population_factor = 2;
   maximum_number_of_populations = 1;
 
-  
+  if(random_seed < 0) {
+    random_seed = (int) clock();
+  }
+
   // File appendix for writing
   std::stringstream ss;
   ss << "_problem" << problem_index << "_run" << std::setw(3) << std::setfill('0') << random_seed;

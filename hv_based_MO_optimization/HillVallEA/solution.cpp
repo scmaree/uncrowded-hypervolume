@@ -72,8 +72,6 @@ namespace hillvallea
     this->multiplier = other.multiplier;
     this->param_transformed = other.param_transformed;
     this->NormTabDis = other.NormTabDis;
-    this->sof_f = other.sof_f;
-    this->sof_constraint = other.sof_constraint;
     this->gradient = other.gradient;
     this->adam_mt = other.adam_mt;
     this->adam_vt = other.adam_vt;

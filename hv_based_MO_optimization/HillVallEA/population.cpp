@@ -172,12 +172,14 @@ namespace hillvallea
       i_start = 0;
     }
     
+    int number_of_evaluations = 0;
     for(size_t i = i_start; i < sols.size(); ++i) {
       fitness_function->evaluate(*sols[i]);
+      number_of_evaluations++;
       // assert(isfinite(sols[i]->f));
     }
     
-    return ((int) (sols.size()-skip_number_of_elites));
+    return number_of_evaluations;
   }
   
   int population_t::evaluate_with_gradients(const fitness_pt fitness_function, const size_t skip_number_of_elites)

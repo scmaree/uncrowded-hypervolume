@@ -63,11 +63,6 @@ namespace hillvallea
     int feval_obtained;
     int generation_obtained;
     
-    // for the Sofomore framework
-    //-----------------------------------------
-    vec_t sof_f;
-    vec_t sof_constraint;
-
     // compare two solutions to see which is best
     //-----------------------------------------
     static bool better_solution_via_pointers(const solution_pt sol1, const solution_pt sol2);
