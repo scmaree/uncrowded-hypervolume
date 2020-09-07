@@ -46,23 +46,19 @@ The Sofomore framework is introduced in *Uncrowded Hypervolume Improvement: COMO
 
 Sofomore-GOMEA does not require a linkage model to be specified (when the multi-objective problem is considered to be a black-box), and the remainder of the inputs is the same as for `uhv_gomea`.
 
-### UHV-Grad (UHV-Adam) (gradient-based multi-objective optimization)
+### UHV-Grad (gradient-based multi-objective optimization)
 Uncrowed hypervolume indicator can be used for efficient gradient-based multi-objective optimization, as described in,
 
 > Multi-objective Optimization by Uncrowded Hypervolume Gradient Ascent
 > by T. M. Deist, S.C. Maree, T. Alderliesten, P.A.N. Bosman, PPSN 2020 
 
-To run UHV-Grad on the example problem (with ADAM as optimizer),
+To run UHV-Grad on the example problem (with ADAM as gradient optimizer),
 
 `./uhv_grad -s -v -r 26 10 9 -10 10 1000 1000000 60 120.7876730749 1234 "./"`
 
 If the flag `-f`, a finite difference approximation of the gradient is used. This flag is automatically activated when the provided problem has no gradients implemented. 
 
-
-Note: There is also a (less clean) implementation available that implements both the ADAM gradient scheme and the GA-MO scheme. The first input parameter specifies the gradient descent methods (ADAM  = 0, GA-MO = 1). It can be run with:
-
-`./uhv_adam -s -v -r 0 26 10 9 -10 10 1000 1000000 60 120.7876730749 1234 "./"`
-
+> Additionally, a **Python implementation** of this method is available at https://github.com/timodeist/uncrowded_hypervolume_gradient_ascent
 
 ### BezEA (smoothly navigable approximation sets)
 Bezier GOMEA (BezEA) is introduced in,
