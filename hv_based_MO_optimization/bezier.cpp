@@ -429,26 +429,42 @@ namespace hillvallea
     
     if(front_indices.size() > 0)
     {
-      std::vector<size_t> sorted_front_order(front_indices.size());
-      for (size_t i = 0; i < sorted_front_order.size(); ++i) {
-        sorted_front_order[i] = i;
-      }
-      std::sort(std::begin(sorted_front_order), std::end(sorted_front_order), [&front_x](double idx, double idy) { return front_x[(size_t)idx] < front_x[(size_t)idy]; });
-      
-      filtered_front_x.push_back(front_x[0]);
-      filtered_front_y.push_back(front_y[0]);
-      is_part_of_sorted_front[front_indices[0]] = true;
-      
-      size_t largest = 0;
-      
-      for(size_t i = 1; i < front_x.size(); ++i) {
-        if(sorted_front_order[i] > largest) {
-          largest = sorted_front_order[i];
-          filtered_front_x.push_back(front_x[sorted_front_order[i]]);
-          filtered_front_y.push_back(front_y[sorted_front_order[i]]);
-          is_part_of_sorted_front[front_indices[sorted_front_order[i]]] = true;
+        // Sort front for increasing obj 0 (values in front_x)
+        std::vector<size_t> sorted_front_order(front_indices.size());
+        for (size_t i = 0; i < sorted_front_order.size(); ++i) {
+            sorted_front_order[i] = i;
         }
-      }
+        std::sort(std::begin(sorted_front_order), std::end(sorted_front_order), [&front_x](double idx, double idy) { return front_x[(size_t)idx] < front_x[(size_t)idy]; });
+
+        // Check front endpoints and subsequently monotonicity
+        int first_front_index = sorted_front_order[0];
+        int last_front_index = sorted_front_order[sorted_front_order.size() - 1];
+        bool monotonic_increasing = first_front_index < last_front_index;
+        size_t previous_index = first_front_index;
+
+        // Create lambdas to check monotonicity and that index is in between endpoints
+        auto monotonic_front = [&monotonic_increasing](int i, int previous_index) { if (monotonic_increasing) { return i > previous_index; } else { return i < previous_index; }; };
+        auto within_endpoints = [&monotonic_increasing, &first_front_index, &last_front_index](int i) {if (monotonic_increasing) { return first_front_index < i < last_front_index; } else { return last_front_index < i < first_front_index; }};
+
+        // Add first endpoint of front
+        filtered_front_x.push_back(front_x[first_front_index]);
+        filtered_front_y.push_back(front_y[first_front_index]);
+        is_part_of_sorted_front[front_indices[first_front_index]] = true;
+
+        // Add all intermediate points if monotonic behaviour is observed and it is within the endpoints
+        for (size_t i = 1; i < front_x.size() - 1; ++i) {
+            if (within_endpoints(i) && monotonic_front(sorted_front_order[i], previous_index)) {
+                previous_index = sorted_front_order[i];
+                filtered_front_x.push_back(front_x[sorted_front_order[i]]);
+                filtered_front_y.push_back(front_y[sorted_front_order[i]]);
+                is_part_of_sorted_front[front_indices[sorted_front_order[i]]] = true;
+            }
+        }
+
+        // Lastly add the final endpoint of the front. In case the front exists of 1 point, this will not change the HV outcome when we add a duplicate point.
+        filtered_front_x.push_back(front_x[last_front_index]);
+        filtered_front_y.push_back(front_y[last_front_index]);
+        is_part_of_sorted_front[front_indices[last_front_index]] = true;
     }
     
     //-----------------------------------------------
