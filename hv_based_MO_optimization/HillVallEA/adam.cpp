@@ -74,7 +74,7 @@ namespace hillvallea
     
     double init_gamma = 0.0;
     for(size_t i = 0; i < fitness_function->number_of_parameters; ++i) {
-      init_gamma += (upper_init_ranges[i] - lower_init_ranges[i]);
+      init_gamma += (this->upper_init_ranges[i] - this->lower_init_ranges[i]);
     }
     init_gamma /= fitness_function->number_of_parameters;
     
